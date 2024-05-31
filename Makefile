@@ -1,13 +1,14 @@
-VERSION=1.22.3
+VERSION=1.24.0
+# ~dev-103-g1ef9b1b
 
-BUILDCOMMAND=docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7
+BUILDCOMMAND=docker build --platform linux/amd64
 
 build:
-	@echo "Use target upload instead; --load does not work in current docker"
-	@false
-#	$(BUILDCOMMAND) --load --build-arg VERSION=$(VERSION) -t openmodelica/openmodelica:v$(VERSION)-minimal - < Dockerfile
-#	$(BUILDCOMMAND) --load --build-arg BASE=openmodelica/openmodelica:v$(VERSION)-minimal -t openmodelica/openmodelica:v$(VERSION)-ompython - < Dockerfile.ompython
-#	$(BUILDCOMMAND) --load --build-arg BASE=openmodelica/openmodelica:v$(VERSION)-ompython -t openmodelica/openmodelica:v$(VERSION)-gui - < Dockerfile.gui
+	# @echo "Use target upload instead; --load does not work in current docker"
+	# @false
+	$(BUILDCOMMAND) --load --build-arg VERSION=$(VERSION) -t openmodelica/openmodelica:v$(VERSION)-minimal - < Dockerfile
+	$(BUILDCOMMAND) --load --build-arg BASE=openmodelica/openmodelica:v$(VERSION)-minimal -t openmodelica/openmodelica:v$(VERSION)-ompython - < Dockerfile.ompython
+	$(BUILDCOMMAND) --load --build-arg BASE=openmodelica/openmodelica:v$(VERSION)-ompython -t openmodelica/openmodelica:v$(VERSION)-gui - < Dockerfile.gui
 
 bootstrap:
 	docker pull tonistiigi/binfmt:latest

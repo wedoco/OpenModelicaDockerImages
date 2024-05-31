@@ -1,14 +1,29 @@
 FROM ubuntu:jammy
 
-ARG VERSION
+ENV VERSION 1.24.0~dev-103-g1ef9b1b-1
+ENV DEBIAN_FRONTEND noninteractive
 
-MAINTAINER Martin Sjölund <martin.sjolund@liu.se>
+# Install packages
+# For OpenModelica we need ca-certificates, curl, gnupg, lsb-release and cmake
+RUN apt update && \
+    apt install --no-install-recommends -y \
+    git \
+    wget \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    cmake \
+    xdg-utils && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN export DEBIAN_FRONTEND="noninteractive" && echo "VERSION: $VERSION" && test ! -z "$VERSION" && apt-get update && apt-get upgrade -qy && apt-get dist-upgrade -qy \
-    && apt-get install -qy gnupg wget ca-certificates apt-transport-https \
-    && echo "deb https://build.openmodelica.org/omc/builds/linux/releases/$VERSION/ `cat /etc/lsb-release | grep CODENAME | cut -d= -f2` release" > /etc/apt/sources.list.d/openmodelica.list \
-    && wget https://build.openmodelica.org/apt/openmodelica.asc -O- | apt-key add - \
-    && apt-get update && apt-get upgrade && apt-get dist-upgrade \
-    && apt-get install --no-install-recommends -qy omc cmake \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Install OpenModelica and Modelica libraries
+# Available OMC versions can be found at https://build.openmodelica.org/apt/dists/focal/
+RUN curl -fsSL http://build.openmodelica.org/apt/openmodelica.asc | gpg --dearmor -o /usr/share/keyrings/openmodelica-keyring.gpg\
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/openmodelica-keyring.gpg] https://build.openmodelica.org/apt \
+    $(lsb_release -cs) nightly" | tee /etc/apt/sources.list.d/openmodelica.list > /dev/null
+RUN apt update && apt install --no-install-recommends -y \
+    openmodelica=$VERSION 
+RUN apt clean && rm -rf /var/lib/apt/lists/*
+
+
