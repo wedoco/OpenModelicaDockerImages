@@ -5,6 +5,10 @@ IMG_NAME=openmodelica/openmodelica:v$(VERSION)
 BUILDCOMMAND=docker build --platform linux/amd64
 
 build:
+	# Before using the GUI make sure you install XQuartz and set:
+	# Settings - security - allow connections from network clients
+	# Also needs to run the following in your local terminal:
+	# xhost + ${HOSTNAME}
 	# @echo "Use target upload instead; --load does not work in current docker"
 	# @false
 	$(BUILDCOMMAND) --load --build-arg VERSION=$(VERSION) -t openmodelica/openmodelica:v$(VERSION)-minimal - < Dockerfile
