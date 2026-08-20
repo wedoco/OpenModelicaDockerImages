@@ -1,4 +1,4 @@
-VERSION=1.26.0
+VERSION=1.28.0
 # ~dev-103-g1ef9b1b
 IMG_NAME=openmodelica/openmodelica:v$(VERSION)
 

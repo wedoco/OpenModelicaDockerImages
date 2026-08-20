@@ -22,7 +22,7 @@ RUN curl -fsSL http://build.openmodelica.org/apt/openmodelica.asc | gpg --dearmo
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/openmodelica-keyring.gpg] https://build.openmodelica.org/apt \
     $(lsb_release -cs) nightly" | tee /etc/apt/sources.list.d/openmodelica.list > /dev/null
 
-ENV VERSION 1.26.0~dev-365-gf18f904-1
+ENV VERSION 1.28.0~dev-329-gd4585d5-1
 
 RUN apt update && apt install --no-install-recommends -y \
     openmodelica=$VERSION 
